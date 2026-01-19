@@ -61,7 +61,10 @@ export default function NovoCafe() {
     try {
       const response = await fetch('/api/coffees', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
         body: JSON.stringify(data)
       });
 
