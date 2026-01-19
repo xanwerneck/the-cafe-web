@@ -53,20 +53,16 @@ export default function NovoCafe() {
     setLoading(true);
     const token = localStorage.getItem('auth_token');
     
-    const data = new FormData();
-    Object.keys(formData).forEach(key => data.append(key, formData[key]));
-    if (picture) {
-      data.append('picture', {
-        ...picture,
-        base64: picture.base64.replace(`data:${picture.type};base64,`,''),
-      });
-    }
+    const data = {...formData, picture: {
+      ...picture,
+      base64: picture.base64.replace(`data:${picture.type};base64,`,''),
+    }}
 
     try {
       const response = await fetch('/api/coffees', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
-        body: data
+        body: JSON.stringify(data)
       });
 
       if (response.ok) {
