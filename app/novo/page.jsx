@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function NovoCafe() {
   const router = useRouter();
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState(null);
+  const [picture, setPicture] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
@@ -29,7 +30,22 @@ export default function NovoCafe() {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) setPreview(URL.createObjectURL(file));
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64DataUrl = reader.result;
+        setPicture({
+          base64: base64DataUrl,
+          type: file.type
+        })
+      };
+
+      reader.onerror = (error) => {
+        console.error("FileReader error:", error);
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -39,8 +55,11 @@ export default function NovoCafe() {
     
     const data = new FormData();
     Object.keys(formData).forEach(key => data.append(key, formData[key]));
-    if (fileInputRef.current.files[0]) {
-      data.append('picture', fileInputRef.current.files[0]);
+    if (picture) {
+      data.append('picture', {
+        ...picture,
+        base64: picture.base64.replace(`data:${picture.type};base64,`,''),
+      });
     }
 
     try {
@@ -100,7 +119,7 @@ export default function NovoCafe() {
           <button 
             onClick={() => {
               setIsSuccess(false);
-              setPreview(null);
+              setPicture(null);
               setFormData({ title: '', producer: '', origin: '', burn: 3, format: 1, tastes: '', bio: '' });
             }}
             className="block w-full bg-[#5e2a8b] text-white py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-[#1B120F] transition-all cursor-pointer"
@@ -135,8 +154,12 @@ export default function NovoCafe() {
             onClick={() => fileInputRef.current.click()}
             className="relative w-full aspect-square rounded-[32px] border-2 border-dashed border-gray-200 bg-[#F8F7F6] flex flex-col items-center justify-center overflow-hidden cursor-pointer hover:border-[#5e2a8b]/30 transition-all"
           >
-            {preview ? (
-              <img src={preview} className="w-full h-full object-cover" alt="Preview" />
+            {picture && picture.base64 ? (
+              <Image 
+                src={picture.base64} 
+                className="w-full h-full object-cover" 
+                alt="Preview"
+                width={250} height={250} />
             ) : (
               <div className="text-center">
                 <span className="text-4xl mb-2 block">📸</span>
