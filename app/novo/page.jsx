@@ -125,13 +125,6 @@ export default function NovoCafe() {
           >
             CADASTRAR OUTRO
           </button>
-          
-          <a 
-            href="https://thecafe.app/open" // Link que redireciona para o app
-            className="block w-full bg-transparent text-[#5e2a8b] py-2 font-black text-xs opacity-40 hover:opacity-100 cursor-pointer tracking-widest uppercase"
-          >
-            Ver meu progresso no App
-          </a>
         </div>
       </div>
     );
