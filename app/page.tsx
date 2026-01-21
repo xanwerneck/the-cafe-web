@@ -1,5 +1,6 @@
 "use client";
 import Link from 'next/link';
+import Feed from '@/components/Feed';
 
 export default function Home() {
   return (
@@ -87,6 +88,9 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Feed */}
+      <Feed />
 
       {/* Footer Simples */}
       <footer className="py-10 text-center border-t border-gray-50">
