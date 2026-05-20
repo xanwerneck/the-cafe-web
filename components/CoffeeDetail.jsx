@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { slugToTitle } from "@/lib/coffeeSlug";
+import { parseCoffeeId, slugToTitle } from "@/lib/coffeeSlug";
 import { burnLevel, formatLabel } from "@/lib/coffeeDisplay";
 
 function DetailCard({ label, value, className = "" }) {
@@ -83,18 +83,23 @@ function TastesList({ tastes }) {
 }
 
 export default function CoffeeDetail({ slug }) {
-  const titleFromSlug = slugToTitle(slug);
+  const coffeeId = parseCoffeeId(slug);
   const [coffee, setCoffee] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/search/coffee?title=${encodeURIComponent(titleFromSlug.toLowerCase())}`)
+
+    const url = coffeeId
+      ? `/api/coffee/${coffeeId}`
+      : `/api/search/coffee?title=${encodeURIComponent(slugToTitle(slug).toLowerCase())}`;
+
+    fetch(url)
       .then((response) => response.json())
-      .then((data) => setCoffee(data?.[0]))
+      .then((data) => setCoffee(coffeeId ? data : data?.[0]))
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
-  }, [titleFromSlug]);
+  }, [slug, coffeeId]);
 
   if (loading) {
     return (

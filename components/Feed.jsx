@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { titleToSlug } from "@/lib/coffeeSlug";
+import { coffeeHref } from "@/lib/coffeeSlug";
 
 const PAGE_SIZE = 4;
 const REQUEST_DELAY_MS = 5000;
@@ -11,7 +11,7 @@ const REQUEST_DELAY_MS = 5000;
 function CoffeeCard({ coffee }) {
   return (
     <Link
-      href={`/coffee/${titleToSlug(coffee.title)}`}
+      href={coffeeHref(coffee)}
       className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow group block"
     >
       <div className="aspect-square w-full bg-gray-100 relative overflow-hidden">
