@@ -5,10 +5,11 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/:path*',
-        destination: 'https://the-cafe-api-service-ffm7qsxejq-rj.a.run.app/:path*', // URL da sua API real
+        source: "/api/:path*",
+        destination:
+          "https://the-cafe-api-service-ffm7qsxejq-rj.a.run.app/api/:path*",
       },
-    ]
+    ];
   },
   images: {
     remotePatterns: [new URL("https://storage.googleapis.com/**")]

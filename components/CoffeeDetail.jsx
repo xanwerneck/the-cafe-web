@@ -1,83 +1,257 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
+import { slugToTitle } from "@/lib/coffeeSlug";
+import { burnLevel, formatLabel } from "@/lib/coffeeDisplay";
 
-export default function CoffeeDetail({ slug }) {
-  const titleFromSlug = slug.replaceAll('-', ' ');
-  const [coffee, setCoffee] = useState()
-
-  useEffect(() => {
-    fetch(`api/search/coffee?title=${titleFromSlug.toLowerCase()}`)
-    .then(response => response.json())
-    .then(data => setCoffee(data?.[0]))
-    .catch(error => console.error(error))
-  }, [titleFromSlug])
-
-  if (!coffee) return null;
+function DetailCard({ label, value, className = "" }) {
+  if (!value) return null;
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* HEADER / NAVIGATION */}
-      <nav className="p-4 flex justify-between items-center border-b border-gray-50">
-        <button onClick={() => window.history.back()} className="text-gray-400">← Voltar</button>
-        <span className="font-bold text-[#4a3728]">The Cafe</span>
-        <button className="text-gray-400">⋮</button>
-      </nav>
+    <div className={`bg-white rounded-2xl ring-1 ring-[#5e2a8b]/8 p-4 ${className}`}>
+      <span className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45 block mb-1">
+        {label}
+      </span>
+      <span className="font-bold text-[#5e2a8b] leading-snug">{value}</span>
+    </div>
+  );
+}
 
-      {/* IMAGEM DO RÓTULO (Destaque Total) */}
-      <div className="w-full aspect-square bg-gray-100">
+function BurnScale({ burn }) {
+  const level = burnLevel(burn);
+  if (!level) return null;
+
+  return (
+    <div className="bg-white rounded-2xl ring-1 ring-[#5e2a8b]/8 p-4 col-span-2">
+      <div className="flex justify-between items-baseline mb-3">
+        <span className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45">
+          Torra
+        </span>
+        <span className="text-sm font-black text-[#5e2a8b]">
+          {level}
+          <span className="text-[#5e2a8b]/35 font-bold">/8</span>
+        </span>
+      </div>
+      <div className="flex gap-1.5">
+        {Array.from({ length: 8 }, (_, i) => (
+          <div
+            key={i}
+            className={`h-2 flex-1 rounded-full transition-colors ${
+              i < level ? "bg-[#5e2a8b]" : "bg-[#E4D1B9]/60"
+            }`}
+          />
+        ))}
+      </div>
+      <p className="text-[10px] text-[#5e2a8b]/40 mt-2 font-medium">
+        1 = mais clara · 8 = mais escura
+      </p>
+    </div>
+  );
+}
+
+function TastesList({ tastes }) {
+  if (!tastes?.trim()) return null;
+
+  const items = tastes
+    .split(/[,|]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return (
+    <section className="space-y-3">
+      <h2 className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45">
+        Notas
+      </h2>
+      {items.length > 1 ? (
+        <div className="flex flex-wrap gap-2">
+          {items.map((note) => (
+            <span
+              key={note}
+              className="px-3 py-1.5 rounded-full bg-[#E4D1B9]/35 text-[#5e2a8b] text-sm font-semibold"
+            >
+              {note}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <p className="text-[#5e2a8b]/80 font-medium leading-relaxed">{tastes}</p>
+      )}
+    </section>
+  );
+}
+
+export default function CoffeeDetail({ slug }) {
+  const titleFromSlug = slugToTitle(slug);
+  const [coffee, setCoffee] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/search/coffee?title=${encodeURIComponent(titleFromSlug.toLowerCase())}`)
+      .then((response) => response.json())
+      .then((data) => setCoffee(data?.[0]))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, [titleFromSlug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FDFCFB] animate-pulse">
+        <div className="h-14 bg-white border-b border-[#5e2a8b]/5" />
+        <div className="aspect-[4/3] max-h-[420px] bg-[#E4D1B9]/20" />
+        <div className="max-w-xl mx-auto px-6 py-8 space-y-4">
+          <div className="h-8 bg-[#E4D1B9]/30 rounded-xl w-3/4" />
+          <div className="h-4 bg-[#E4D1B9]/20 rounded-lg w-1/3" />
+          <div className="h-24 bg-white rounded-2xl ring-1 ring-[#5e2a8b]/5" />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="h-20 bg-white rounded-2xl ring-1 ring-[#5e2a8b]/5" />
+            <div className="h-20 bg-white rounded-2xl ring-1 ring-[#5e2a8b]/5" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!coffee) {
+    return (
+      <div className="min-h-screen bg-[#FDFCFB] flex flex-col items-center justify-center gap-6 p-6 text-center">
+        <span className="text-4xl">☕</span>
+        <div>
+          <h1 className="text-xl font-black text-[#5e2a8b] tracking-tight">
+            Café não encontrado
+          </h1>
+          <p className="text-sm text-[#5e2a8b]/50 mt-1 font-medium">
+            Este rótulo pode ter sido removido ou o link está incorreto.
+          </p>
+        </div>
+        <Link
+          href="/"
+          className="bg-[#5e2a8b] text-white px-8 py-3 rounded-2xl font-bold text-sm"
+        >
+          Voltar ao início
+        </Link>
+      </div>
+    );
+  }
+
+  const title = coffee.title || coffee.name;
+  const hasBio = Boolean(coffee.bio?.trim());
+
+  return (
+    <div className="min-h-screen bg-[#FDFCFB] text-[#5e2a8b] pb-12">
+      <header className="sticky top-0 z-10 bg-[#FDFCFB]/90 backdrop-blur-md border-b border-[#5e2a8b]/5">
+        <nav className="max-w-xl mx-auto px-4 py-4 flex justify-between items-center">
+          <button
+            type="button"
+            onClick={() => window.history.back()}
+            className="text-xs font-bold uppercase tracking-widest opacity-50 hover:opacity-100 transition-opacity"
+          >
+            ← Voltar
+          </button>
+          <Link href="/" className="font-black tracking-tighter text-lg">
+            The Cafe
+          </Link>
+          <div className="w-14" />
+        </nav>
+      </header>
+
+      <div className="relative w-full max-h-[420px] aspect-[4/3] bg-[#E4D1B9]/20 overflow-hidden">
         <Image
-          src={coffee.original_picture} 
-          alt={coffee.title}
-          className="w-full h-full object-cover"
-          width={250} height={250}
+          src={coffee.original_picture || coffee.resized_picture}
+          alt={title}
+          className="object-cover w-full h-full"
+          width={800}
+          height={600}
+          priority
         />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FDFCFB] to-transparent" />
       </div>
 
-      {/* INFO PRINCIPAL */}
-      <div className="p-6 space-y-6">
-        <header>
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-black text-gray-900 leading-tight">{coffee.name}</h1>
-              {coffee.user && 
-                <p className="text-lg text-gray-500 font-medium">@{coffee.user.username}</p>
-              }
+      <main className="max-w-xl mx-auto px-6 -mt-6 relative space-y-6">
+        <section className="space-y-3">
+          <div className="flex justify-between items-start gap-4">
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-black uppercase tracking-[2px] text-[#5e2a8b]/40 mb-1">
+                Título
+              </p>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight capitalize">
+                {title}
+              </h1>
             </div>
-            <div className="bg-gray-50 p-3 rounded-2xl text-center min-w-[60px]">
-              <span className="block text-2xl">☕</span>
-              <span className="text-sm font-bold">{coffee.views || 0}</span>
+            <div className="shrink-0 bg-white ring-1 ring-[#5e2a8b]/10 px-4 py-3 rounded-2xl text-center shadow-sm">
+              <span className="block text-2xl leading-none">☕</span>
+              <span className="text-xs font-black mt-1 block">{coffee.views || 0}</span>
             </div>
           </div>
-        </header>
 
-        {/* NOTAS DO DONO (O "Que as pessoas falam") */}
-        <section className="bg-brown-50/50 p-4 rounded-2xl border border-brown-100">
-          <h2 className="text-xs font-bold uppercase text-brown-400 tracking-widest mb-2">Comentários</h2>
-          <p className="text-gray-700 leading-relaxed italic">
-            "{coffee.notes || 'Nenhuma descrição adicionada.'}"
-          </p>
+          {coffee.user && (
+            <div className="inline-flex items-center gap-2 bg-white ring-1 ring-[#5e2a8b]/8 rounded-full pl-1 pr-4 py-1">
+              {coffee.user.original_picture ? (
+                <Image
+                  src={coffee.user.original_picture}
+                  alt=""
+                  width={28}
+                  height={28}
+                  className="rounded-full object-cover w-7 h-7"
+                />
+              ) : (
+                <span className="w-7 h-7 rounded-full bg-[#E4D1B9]/50 flex items-center justify-center text-xs">
+                  ☕
+                </span>
+              )}
+              <span className="text-sm font-bold">@{coffee.user.username}</span>
+              {coffee.user.verified && (
+                <span className="text-[10px] font-black uppercase tracking-wide text-blue-500">
+                  ✓ Verificado
+                </span>
+              )}
+            </div>
+          )}
         </section>
 
-        {/* DETALHES TÉCNICOS (O Caos Organizado) */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="border border-gray-100 p-4 rounded-xl">
-            <span className="text-xs text-gray-400 block uppercase">Processo</span>
-            <span className="font-bold text-gray-700">{coffee.process || 'N/A'}</span>
-          </div>
-          <div className="border border-gray-100 p-4 rounded-xl">
-            <span className="text-xs text-gray-400 block uppercase">Altitude</span>
-            <span className="font-bold text-gray-700">{coffee.altitude || 'N/A'}</span>
-          </div>
-        </div>
+        {hasBio && (
+          <section className="bg-white rounded-[24px] p-5 ring-1 ring-[#5e2a8b]/8 shadow-sm">
+            <h2 className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45 mb-2">
+              Descrição
+            </h2>
+            <p className="text-[#5e2a8b]/85 leading-relaxed font-medium">{coffee.bio}</p>
+          </section>
+        )}
 
-        {/* CTA PARA QUEM VEM DE FORA */}
-        <div className="pt-8 text-center">
-          <p className="text-gray-400 text-sm mb-4">Gostou deste café? Comece sua própria estante.</p>
-          <button className="w-full bg-[#4a3728] text-white py-4 rounded-2xl font-bold shadow-xl shadow-brown-200">
-            Criar minha Estante ☕
-          </button>
-        </div>
-      </div>
+        {coffee.tastes?.trim() && (
+          <section className="bg-white rounded-[24px] p-5 ring-1 ring-[#5e2a8b]/8 shadow-sm">
+            <TastesList tastes={coffee.tastes} />
+          </section>
+        )}
+
+        <section className="grid grid-cols-2 gap-3">
+          <DetailCard label="Origem" value={coffee.origin} className="capitalize" />
+          <DetailCard label="Produtor" value={coffee.producer} className="capitalize" />
+          <DetailCard
+            label="Formato"
+            value={coffee.format != null ? formatLabel(coffee.format) : null}
+          />
+          {coffee.process && (
+            <DetailCard label="Processo" value={coffee.process} className="capitalize" />
+          )}
+          {coffee.altitude && <DetailCard label="Altitude" value={coffee.altitude} />}
+          <BurnScale burn={coffee.burn} />
+        </section>
+
+        <section className="pt-4 text-center space-y-4">
+          <p className="text-sm text-[#5e2a8b]/50 font-medium">
+            Gostou deste café? Monte sua própria estante virtual.
+          </p>
+          <Link
+            href="/novo"
+            className="block w-full bg-[#5e2a8b] text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-[#5e2a8b]/20 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+          >
+            Catalogar meu café ☕
+          </Link>
+        </section>
+      </main>
     </div>
   );
 }
