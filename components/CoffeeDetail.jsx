@@ -91,7 +91,7 @@ export default function CoffeeDetail({ slug }) {
     setLoading(true);
 
     const url = coffeeId
-      ? `/api/coffee/${coffeeId}`
+      ? `/api/coffees/${coffeeId}`
       : `/api/search/coffee?title=${encodeURIComponent(slugToTitle(slug).toLowerCase())}`;
 
     fetch(url)
