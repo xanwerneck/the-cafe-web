@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { coffeeHref } from "@/lib/coffeeSlug";
 
 const PAGE_SIZE = 4;
-const REQUEST_DELAY_MS = 5000;
 
 function CoffeeCard({ coffee }) {
   return (
@@ -31,7 +30,7 @@ function CoffeeCard({ coffee }) {
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <div>
-            <h3 className="font-bold text-gray-900 leading-tight">{coffee.title}</h3>
+            <h3 className="font-bold text-gray-900 leading-tight line-clamp-2">{coffee.title}</h3>
             <p className="text-xs text-gray-500">
               por @{coffee.user?.username || "Entusiasta"}
             </p>
@@ -58,23 +57,6 @@ function CoffeeCardSkeleton() {
   );
 }
 
-function LoadingIndicator({ label }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 py-10">
-      <div className="flex gap-1">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            className="w-2 h-2 rounded-full bg-[#5e2a8b]/40 animate-bounce"
-            style={{ animationDelay: `${i * 150}ms` }}
-          />
-        ))}
-      </div>
-      <p className="text-sm font-medium text-[#5e2a8b]/50">{label}</p>
-    </div>
-  );
-}
-
 export default function Feed() {
   const [coffees, setCoffees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,16 +65,12 @@ export default function Feed() {
   const pageRef = useRef(1);
   const loadingRef = useRef(false);
   const hasMoreRef = useRef(true);
-  const canLoadMoreRef = useRef(false);
-  const sentinelRef = useRef(null);
 
   const loadNextPage = useCallback(async () => {
     if (loadingRef.current || !hasMoreRef.current) return;
 
     loadingRef.current = true;
     setLoading(true);
-
-    await new Promise((resolve) => setTimeout(resolve, REQUEST_DELAY_MS));
 
     const page = pageRef.current;
 
@@ -120,7 +98,6 @@ export default function Feed() {
     } finally {
       loadingRef.current = false;
       setLoading(false);
-      canLoadMoreRef.current = true;
     }
   }, []);
 
@@ -128,36 +105,16 @@ export default function Feed() {
     loadNextPage();
   }, [loadNextPage]);
 
-  useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (
-          entries[0].isIntersecting &&
-          canLoadMoreRef.current &&
-          !loadingRef.current &&
-          hasMoreRef.current
-        ) {
-          loadNextPage();
-        }
-      },
-      { rootMargin: "240px" }
-    );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [hasMore, loadNextPage, coffees.length]);
-
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-12">
       <header className="mb-8 text-center">
-        <h1 className="text-2xl font-bold text-[#5e2a8b]">Descobertas da Comunidade</h1>
-        <p className="opacity-70">O que os entusiastas estão bebendo agora</p>
+        <h2 className="text-2xl md:text-3xl font-black tracking-tight text-[#5e2a8b]">
+          Descobertas da Comunidade
+        </h2>
+        <p className="opacity-70 font-medium mt-1">O que os entusiastas estão bebendo agora</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {coffees.map((coffee) => (
           <CoffeeCard key={coffee.id} coffee={coffee} />
         ))}
@@ -169,23 +126,30 @@ export default function Feed() {
           ))}
       </div>
 
-      <div ref={sentinelRef} className="min-h-px" aria-hidden />
+      <div className="mt-10 flex flex-col items-center gap-4">
+        {hasMore && (
+          <button
+            type="button"
+            onClick={loadNextPage}
+            disabled={loading}
+            className="bg-white text-[#5e2a8b] border-2 border-[#5e2a8b]/15 px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-sm hover:bg-[#E4D1B9]/20 hover:border-[#5e2a8b]/25 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          >
+            {loading ? "Carregando..." : "Carregar mais rótulos"}
+          </button>
+        )}
 
-      {loading && coffees.length > 0 && (
-        <LoadingIndicator label="Carregando mais cafés..." />
-      )}
+        {!loading && !hasMore && coffees.length > 0 && (
+          <p className="text-sm text-[#5e2a8b]/40 font-medium">
+            Você viu todos os cafés por agora ☕
+          </p>
+        )}
 
-      {!loading && !hasMore && coffees.length > 0 && (
-        <p className="text-center text-sm text-[#5e2a8b]/40 font-medium py-10">
-          Você viu todos os cafés por agora ☕
-        </p>
-      )}
-
-      {!loading && coffees.length === 0 && (
-        <p className="text-center text-sm text-[#5e2a8b]/50 font-medium py-10">
-          Nenhum café encontrado no momento.
-        </p>
-      )}
+        {!loading && coffees.length === 0 && (
+          <p className="text-sm text-[#5e2a8b]/50 font-medium">
+            Nenhum café encontrado no momento.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
