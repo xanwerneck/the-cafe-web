@@ -11,6 +11,19 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async headers() {
+    return [
+      {
+        source: '/api/:path*'
+        headers: [
+          {
+            key: 'CDN-Cache-Control',
+            value: 'public, max-age=3600000, s-maxage=3600000',
+          },
+        ],
+      },
+    ]
+  },
   images: {
     remotePatterns: [new URL("https://storage.googleapis.com/**")]
   }
