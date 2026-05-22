@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PageHeader from "@/components/PageHeader";
-import { parseCoffeeId, slugToTitle } from "@/lib/coffeeSlug";
+import { parseCoffeeId } from "@/lib/coffeeSlug";
 import { burnLevel, formatLabel } from "@/lib/coffeeDisplay";
 import { userHref } from "@/lib/userSlug";
 
@@ -88,20 +88,51 @@ export default function CoffeeDetail({ slug }) {
   const coffeeId = parseCoffeeId(slug);
   const [coffee, setCoffee] = useState(null);
   const [loading, setLoading] = useState(true);
+  const viewsRecorded = useRef(false);
 
   useEffect(() => {
+    if (!coffeeId || viewsRecorded.current) return;
+    viewsRecorded.current = true;
+    fetch(`/api/coffees/${coffeeId}/views`, { method: "PUT" });
+  }, [coffeeId]);
+
+  useEffect(() => {
+    if (!coffeeId) {
+      setCoffee(null);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
 
-    const url = coffeeId
-      ? `/api/coffees/${coffeeId}`
-      : `/api/search/coffee?title=${encodeURIComponent(slugToTitle(slug).toLowerCase())}`;
-
-    fetch(url)
+    fetch(`/api/coffees/${coffeeId}`)
       .then((response) => response.json())
-      .then((data) => setCoffee(coffeeId ? data : data?.[0]))
+      .then((data) => setCoffee(data))
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
-  }, [slug, coffeeId]);
+  }, [coffeeId]);
+
+  if (!coffeeId) {
+    return (
+      <div className="min-h-screen bg-[#FDFCFB] flex flex-col items-center justify-center gap-6 p-6 text-center">
+        <span className="text-4xl">☕</span>
+        <div>
+          <h1 className="text-xl font-black text-[#5e2a8b] tracking-tight">
+            Café não encontrado
+          </h1>
+          <p className="text-sm text-[#5e2a8b]/50 mt-1 font-medium">
+            Este rótulo pode ter sido removido ou o link está incorreto.
+          </p>
+        </div>
+        <Link
+          href="/"
+          className="bg-[#5e2a8b] text-white px-8 py-3 rounded-2xl font-bold text-sm"
+        >
+          Voltar ao início
+        </Link>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
