@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: '/api/:path*'
+        source: '/api/:path*',
         headers: [
           {
             key: 'CDN-Cache-Control',
