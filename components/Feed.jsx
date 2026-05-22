@@ -2,37 +2,56 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { coffeeHref } from "@/lib/coffeeSlug";
+import { userHref } from "@/lib/userSlug";
 
 const PAGE_SIZE = 4;
 
 function CoffeeCard({ coffee }) {
+  const router = useRouter();
+  const href = coffeeHref(coffee);
+
   return (
-    <Link
-      href={coffeeHref(coffee)}
-      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow group block"
-    >
-      <div className="aspect-square w-full bg-gray-100 relative overflow-hidden">
-        <Image
-          src={coffee.original_picture}
-          alt={coffee.title}
-          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-          width={250}
-          height={250}
-        />
-        {coffee.process && (
-          <span className="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight shadow-sm">
-            {coffee.process}
-          </span>
-        )}
-      </div>
+    <article className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow group">
+      <Link href={href} className="block">
+        <div className="aspect-square w-full bg-gray-100 relative overflow-hidden">
+          <Image
+            src={coffee.original_picture}
+            alt={coffee.title}
+            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+            width={250}
+            height={250}
+          />
+          {coffee.process && (
+            <span className="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight shadow-sm">
+              {coffee.process}
+            </span>
+          )}
+        </div>
+      </Link>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <div>
-            <h3 className="font-bold text-gray-900 leading-tight line-clamp-2">{coffee.title}</h3>
+            <Link href={href}>
+              <h3 className="font-bold text-gray-900 leading-tight line-clamp-2 hover:text-[#5e2a8b] transition-colors">
+                {coffee.title}
+              </h3>
+            </Link>
             <p className="text-xs text-gray-500">
-              por @{coffee.user?.username || "Entusiasta"}
+              por{" "}
+              {coffee.user?.username ? (
+                <button
+                  type="button"
+                  onClick={() => router.push(userHref(coffee.user.username))}
+                  className="hover:text-[#5e2a8b] hover:underline cursor-pointer"
+                >
+                  @{coffee.user.username}
+                </button>
+              ) : (
+                "@Entusiasta"
+              )}
             </p>
           </div>
           <span className="flex flex-col items-center text-gray-400">
@@ -41,7 +60,7 @@ function CoffeeCard({ coffee }) {
           </span>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }
 

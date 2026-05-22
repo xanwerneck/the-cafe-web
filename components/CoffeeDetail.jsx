@@ -3,8 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import PageHeader from "@/components/PageHeader";
 import { parseCoffeeId, slugToTitle } from "@/lib/coffeeSlug";
 import { burnLevel, formatLabel } from "@/lib/coffeeDisplay";
+import { userHref } from "@/lib/userSlug";
 
 function DetailCard({ label, value, className = "" }) {
   if (!value) return null;
@@ -146,21 +148,7 @@ export default function CoffeeDetail({ slug }) {
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] text-[#5e2a8b] pb-12">
-      <header className="sticky top-0 z-10 bg-[#FDFCFB]/90 backdrop-blur-md border-b border-[#5e2a8b]/5">
-        <nav className="max-w-xl mx-auto px-4 py-4 flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => window.history.back()}
-            className="text-xs font-bold uppercase tracking-widest opacity-50 hover:opacity-100 transition-opacity"
-          >
-            ← Voltar
-          </button>
-          <Link href="/" className="font-black tracking-tighter text-lg">
-            The Cafe
-          </Link>
-          <div className="w-14" />
-        </nav>
-      </header>
+      <PageHeader />
 
       <div className="relative w-full max-h-[420px] aspect-[4/3] bg-[#E4D1B9]/20 overflow-hidden">
         <Image
@@ -191,8 +179,11 @@ export default function CoffeeDetail({ slug }) {
             </div>
           </div>
 
-          {coffee.user && (
-            <div className="inline-flex items-center gap-2 bg-white ring-1 ring-[#5e2a8b]/8 rounded-full pl-1 pr-4 py-1">
+          {coffee.user?.username && (
+            <Link
+              href={userHref(coffee.user.username)}
+              className="inline-flex items-center gap-2 bg-white ring-1 ring-[#5e2a8b]/8 rounded-full pl-1 pr-4 py-1 hover:ring-[#5e2a8b]/20 hover:shadow-sm transition-all"
+            >
               {coffee.user.original_picture ? (
                 <Image
                   src={coffee.user.original_picture}
@@ -212,7 +203,7 @@ export default function CoffeeDetail({ slug }) {
                   ✓ Verificado
                 </span>
               )}
-            </div>
+            </Link>
           )}
         </section>
 
