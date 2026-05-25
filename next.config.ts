@@ -17,8 +17,8 @@ const nextConfig: NextConfig = {
         source: '/api/:path*',
         headers: [
           {
-            key: 'CDN-Cache-Control',
-            value: 'public, max-age=3600000, s-maxage=3600000',
+            key: 'Cache-Control',
+            value: 'public, s-maxage=3600, stale-while-revalidate=60',
           },
         ],
       },
