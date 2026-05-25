@@ -81,7 +81,7 @@ export default function Feed() {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
 
-  const pageRef = useRef(1);
+  const pageRef = useRef(0);
   const loadingRef = useRef(false);
   const hasMoreRef = useRef(true);
 
