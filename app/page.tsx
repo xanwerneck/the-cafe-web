@@ -1,136 +1,98 @@
-"use client";
-import Link from "next/link";
-import Feed from "@/components/Feed";
-import { useAuth } from "@/components/AuthProvider";
-import { userHref } from "@/lib/userSlug";
+import type { Metadata } from "next";
+import HomePage from "@/components/HomePage";
+import { siteConfig, siteTitle } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: siteTitle,
+  description: siteConfig.description,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: siteConfig.locale,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: siteTitle,
+    description: siteConfig.description,
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteConfig.description,
+    images: ["/logo.png"],
+  },
+};
+
+function homeJsonLd() {
+  const { url, name, description, appStoreUrl, playStoreUrl } = siteConfig;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${url}/#website`,
+        url,
+        name,
+        description,
+        inLanguage: "pt-BR",
+        publisher: { "@id": `${url}/#organization` },
+      },
+      {
+        "@type": "Organization",
+        "@id": `${url}/#organization`,
+        name,
+        url,
+        logo: {
+          "@type": "ImageObject",
+          url: `${url}/logo.png`,
+        },
+      },
+      {
+        "@type": "MobileApplication",
+        name,
+        operatingSystem: "iOS",
+        applicationCategory: "LifestyleApplication",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "BRL",
+        },
+        downloadUrl: appStoreUrl,
+      },
+      {
+        "@type": "MobileApplication",
+        name,
+        operatingSystem: "Android",
+        applicationCategory: "LifestyleApplication",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "BRL",
+        },
+        downloadUrl: playStoreUrl,
+      },
+    ],
+  };
+}
 
 export default function Home() {
-  const { ready, isAuthenticated, user, logout } = useAuth();
-  const catalogHref = isAuthenticated ? "/novo" : "/login?redirect=/novo";
-
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-[#5e2a8b] selection:bg-[#5e2a8b] selection:text-white">
-      <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
-        <img src="/logo.png" alt="The Cafe" className="h-8 w-auto object-contain" />
-        <div className="flex items-center gap-4">
-          {ready && isAuthenticated && user?.username ? (
-            <Link
-              href={userHref(user.username)}
-              className="text-xs font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
-            >
-              @{user.username}
-            </Link>
-          ) : null}
-          {ready && isAuthenticated ? (
-            <button
-              type="button"
-              onClick={logout}
-              className="text-xs font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
-            >
-              Sair
-            </button>
-          ) : (
-            <Link
-              href="/login"
-              className="text-xs font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
-            >
-              Entrar
-            </Link>
-          )}
-        </div>
-      </nav>
-
-      <section className="max-w-5xl mx-auto px-6 pt-12 pb-16 text-center">
-        <div className="inline-block bg-[#E4D1B9]/30 text-[#5e2a8b] px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[2px] mb-6">
-          Comunidade para os Apaixonados por café
-        </div>
-
-        <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-[0.95] mb-6">
-          Sua estante virtual{" "}
-          <span className="text-[#5e2a8b]/40 italic">de cafés especiais.</span>
-        </h1>
-
-        <p className="max-w-md mx-auto text-lg opacity-70 font-medium leading-relaxed mb-10">
-          Catalogue seus grãos favoritos, descubra novas origens e conquiste seu selo de especialista.
-        </p>
-
-        <div className="flex flex-col gap-4 w-full max-w-sm sm:max-w-none items-center justify-center mx-auto">
-          <Link
-            href={catalogHref}
-            className="w-full sm:w-auto bg-[#5e2a8b] text-white px-12 py-5 rounded-2xl font-black text-xl shadow-2xl hover:scale-[1.03] active:scale-95 transition-all cursor-pointer text-center"
-          >
-            CATALOGAR MEU CAFÉ
-          </Link>
-
-          {ready && isAuthenticated ? (
-            <p className="text-[10px] font-black text-[#5e2a8b]/50 tracking-[2px] uppercase">
-              Você está conectado{user?.name ? `, ${user.name.split(" ")[0]}` : ""}
-            </p>
-          ) : null}
-
-          <p className="text-[10px] font-black opacity-30 tracking-[3px] uppercase">
-            Ou baixe o app nativo
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <a
-              href="https://apps.apple.com/us/app/the-cafe/id6472904370"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-white text-[#5e2a8b] border-2 border-[#5e2a8b]/10 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all cursor-pointer shadow-sm"
-            >
-              <span className="text-xl"></span>
-              <span className="text-sm tracking-tight">App Store</span>
-            </a>
-
-            <a
-              href="https://play.google.com/store/apps/details?id=com.thecafeapp"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-white text-[#5e2a8b] border-2 border-[#5e2a8b]/10 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all cursor-pointer shadow-sm"
-            >
-              <span className="text-xl">🤖</span>
-              <span className="text-sm tracking-tight">Google Play</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <hr className="max-w-7xl mx-auto border-0 h-px bg-gradient-to-r from-transparent via-[#5e2a8b]/15 to-transparent" />
-
-      <Feed />
-
-      <section className="max-w-5xl mx-auto px-6 py-16 border-t border-gray-100">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="space-y-3 text-center md:text-left">
-            <span className="text-2xl">📸</span>
-            <h3 className="font-black text-sm uppercase tracking-tight">Foto do Rótulo</h3>
-            <p className="text-sm opacity-60 font-medium">
-              Digitalize seus pacotes de café e mantenha um histórico visual da sua jornada.
-            </p>
-          </div>
-          <div className="space-y-3 text-center md:text-left">
-            <span className="text-2xl">🎖️</span>
-            <h3 className="font-black text-sm uppercase tracking-tight">Selo Especialista</h3>
-            <p className="text-sm opacity-60 font-medium">
-              Cadastre 10 rótulos válidos e torne seu perfil verificado na comunidade.
-            </p>
-          </div>
-          <div className="space-y-3 text-center md:text-left">
-            <span className="text-2xl">🌍</span>
-            <h3 className="font-black text-sm uppercase tracking-tight">Origens Únicas</h3>
-            <p className="text-sm opacity-60 font-medium">
-              Explore produtores de todo o mundo, da Colômbia ao Cerrado Mineiro.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <footer className="py-10 text-center border-t border-gray-50">
-        <p className="text-[10px] font-bold opacity-30 uppercase tracking-[3px]">
-          The Cafe © 2026 • Feito para quem ama grãos.
-        </p>
-      </footer>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd()) }}
+      />
+      <HomePage />
+    </>
   );
 }
