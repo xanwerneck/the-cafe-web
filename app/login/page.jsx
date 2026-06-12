@@ -1,31 +1,43 @@
 "use client";
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/components/AuthProvider";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/novo";
+  const { ready, isAuthenticated, setSessionFromResponse, signInWithCredentials } =
+    useAuth();
 
-  // Estados dos campos
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    if (ready && isAuthenticated) {
+      router.replace(redirectTo);
+    }
+  }, [ready, isAuthenticated, router, redirectTo]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const endpoint = isLogin ? 'api/signin' : 'api/users'; 
-    const payload = isLogin ? { email, password } : { name, username, email, password };
+    const endpoint = isLogin ? "api/signin" : "api/users";
+    const payload = isLogin
+      ? { email, password }
+      : { name, username, email, password };
 
     try {
       const response = await fetch(`/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
@@ -35,12 +47,15 @@ export default function LoginPage() {
         throw new Error(data.message || "Erro ao processar requisição");
       }
 
-      if (data.token) {
-        localStorage.setItem('auth_token', data.token);
+      let token = setSessionFromResponse(data);
+
+      if (!token && !isLogin) {
+        await signInWithCredentials({ email, password });
+      } else if (!token) {
+        throw new Error("Sessão inválida: token não recebido do servidor");
       }
 
-      router.push('/novo');
-
+      router.push(redirectTo);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -48,18 +63,25 @@ export default function LoginPage() {
     }
   };
 
+  if (!ready) {
+    return (
+      <div className="min-h-screen bg-[#FDFCFB] flex items-center justify-center text-[#5e2a8b] text-sm font-bold opacity-50">
+        CARREGANDO...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FDFCFB] flex flex-col justify-center px-6 py-12">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <h2 className="text-4xl font-black tracking-tighter text-[#5e2a8b] mb-2">thecafe.app</h2>
         <p className="text-[#5e2a8b] opacity-60 font-medium mb-10">
-          {isLogin ? 'Faça login para continuar' : 'Crie sua conta no The Cafe'}
+          {isLogin ? "Faça login para continuar" : "Crie sua conta no The Cafe"}
         </p>
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-[400px]">
         <div className="bg-white py-10 px-8 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] rounded-[32px] border border-gray-100">
-          
           {error && (
             <div className="mb-6 p-3 bg-red-50 text-red-600 text-xs font-bold rounded-xl text-center">
               {error.toUpperCase()}
@@ -121,7 +143,7 @@ export default function LoginPage() {
                 disabled={loading}
                 className="flex w-full justify-center rounded-2xl bg-[#5e2a8b] px-4 py-5 text-base font-bold text-[#FFFFFF] shadow-lg hover:bg-[#1B120F] transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
               >
-                {loading ? 'CARREGANDO...' : isLogin ? 'ENTRAR' : 'CADASTRAR'}
+                {loading ? "CARREGANDO..." : isLogin ? "ENTRAR" : "CADASTRAR"}
               </button>
             </div>
           </form>
@@ -131,11 +153,25 @@ export default function LoginPage() {
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm font-bold text-[#5e2a8b] opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
             >
-              {isLogin ? 'Criar uma conta nova' : 'Já tenho uma conta'}
+              {isLogin ? "Criar uma conta nova" : "Já tenho uma conta"}
             </button>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#FDFCFB] flex items-center justify-center text-[#5e2a8b] text-sm font-bold opacity-50">
+          CARREGANDO...
+        </div>
+      }
+    >
+      <LoginPageContent />
+    </Suspense>
   );
 }

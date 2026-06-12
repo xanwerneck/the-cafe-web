@@ -1,18 +1,43 @@
 "use client";
-import Link from 'next/link';
-import Feed from '@/components/Feed';
+import Link from "next/link";
+import Feed from "@/components/Feed";
+import { useAuth } from "@/components/AuthProvider";
+import { userHref } from "@/lib/userSlug";
 
 export default function Home() {
+  const { ready, isAuthenticated, user, logout } = useAuth();
+  const catalogHref = isAuthenticated ? "/novo" : "/login?redirect=/novo";
+
   return (
     <div className="min-h-screen bg-[#FDFCFB] text-[#5e2a8b] selection:bg-[#5e2a8b] selection:text-white">
       <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <img src="/logo.png" alt="The Cafe" className="h-8 w-auto object-contain" />
-        <Link
-          href="/login"
-          className="text-xs font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
-        >
-          Entrar
-        </Link>
+        <div className="flex items-center gap-4">
+          {ready && isAuthenticated && user?.username ? (
+            <Link
+              href={userHref(user.username)}
+              className="text-xs font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+            >
+              @{user.username}
+            </Link>
+          ) : null}
+          {ready && isAuthenticated ? (
+            <button
+              type="button"
+              onClick={logout}
+              className="text-xs font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+            >
+              Sair
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="text-xs font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+            >
+              Entrar
+            </Link>
+          )}
+        </div>
       </nav>
 
       <section className="max-w-5xl mx-auto px-6 pt-12 pb-16 text-center">
@@ -31,11 +56,17 @@ export default function Home() {
 
         <div className="flex flex-col gap-4 w-full max-w-sm sm:max-w-none items-center justify-center mx-auto">
           <Link
-            href="/novo"
+            href={catalogHref}
             className="w-full sm:w-auto bg-[#5e2a8b] text-white px-12 py-5 rounded-2xl font-black text-xl shadow-2xl hover:scale-[1.03] active:scale-95 transition-all cursor-pointer text-center"
           >
             CATALOGAR MEU CAFÉ
           </Link>
+
+          {ready && isAuthenticated ? (
+            <p className="text-[10px] font-black text-[#5e2a8b]/50 tracking-[2px] uppercase">
+              Você está conectado{user?.name ? `, ${user.name.split(" ")[0]}` : ""}
+            </p>
+          ) : null}
 
           <p className="text-[10px] font-black opacity-30 tracking-[3px] uppercase">
             Ou baixe o app nativo

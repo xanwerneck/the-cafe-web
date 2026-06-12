@@ -2,9 +2,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useAuth } from '@/components/AuthProvider';
 
 export default function NovoCafe() {
   const router = useRouter();
+  const { ready, isAuthenticated, token } = useAuth();
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [picture, setPicture] = useState(null);
@@ -12,12 +14,11 @@ export default function NovoCafe() {
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    
-    if (!token) {
-      router.push('/login');
+    if (!ready) return;
+    if (!isAuthenticated) {
+      router.replace('/login?redirect=/novo');
     }
-  }, [router]);
+  }, [ready, isAuthenticated, router]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -52,8 +53,7 @@ export default function NovoCafe() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const token = localStorage.getItem('auth_token');
-    
+
     const data = {...formData, picture: {
       ...picture,
       base64: picture.base64.replace(`data:${picture.type};base64,`,''),
@@ -80,6 +80,14 @@ export default function NovoCafe() {
       setLoading(false);
     }
   };
+
+  if (!ready || !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#FDFCFB] flex items-center justify-center text-[#5e2a8b] text-sm font-bold opacity-50">
+        CARREGANDO...
+      </div>
+    );
+  }
 
   if (isSuccess) {
     return (
