@@ -94,31 +94,17 @@ export default function HomePage() {
               Ou baixe o app nativo
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <a
-                href={siteConfig.appStoreUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-white text-[#5e2a8b] border-2 border-[#5e2a8b]/10 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all cursor-pointer shadow-sm"
-              >
-                <span className="text-xl" aria-hidden="true">
-                  
-                </span>
-                <span className="text-sm tracking-tight">App Store</span>
-              </a>
-
-              <a
-                href={siteConfig.playStoreUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-white text-[#5e2a8b] border-2 border-[#5e2a8b]/10 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all cursor-pointer shadow-sm"
-              >
-                <span className="text-xl" aria-hidden="true">
-                  🤖
-                </span>
-                <span className="text-sm tracking-tight">Google Play</span>
-              </a>
-            </div>
+            <a
+              href={siteConfig.playStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 bg-white text-[#5e2a8b] border-2 border-[#5e2a8b]/10 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all cursor-pointer shadow-sm w-full sm:w-auto"
+            >
+              <span className="text-xl" aria-hidden="true">
+                🤖
+              </span>
+              <span className="text-sm tracking-tight">Google Play</span>
+            </a>
           </div>
         </section>
       </header>
