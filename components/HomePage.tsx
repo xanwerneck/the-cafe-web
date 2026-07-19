@@ -162,7 +162,13 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="py-10 text-center border-t border-gray-50">
+      <footer className="py-10 text-center border-t border-gray-50 space-y-3">
+        <a
+          href={siteConfig.blogUrl}
+          className="inline-block text-[10px] font-bold text-[#5e2a8b]/50 uppercase tracking-[3px] hover:text-[#5e2a8b] transition-colors"
+        >
+          Blog — guias de café especial
+        </a>
         <p className="text-[10px] font-bold opacity-30 uppercase tracking-[3px]">
           The Cafe © 2026 • Feito para quem ama grãos.
         </p>
