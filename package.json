@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "fetch-feed-seed": "node scripts/fetch-feed-seed.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
