@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import BlogContent from "@/components/blog/BlogContent";
 import BlogHeader from "@/components/blog/BlogHeader";
+import BlogPostHero from "@/components/blog/BlogPostHero";
 import { formatBlogDate } from "@/components/blog/BlogPostCard";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blog/posts";
 import { blogHomeHref, blogPostHref, blogPublicUrl } from "@/lib/blog/urls";
@@ -47,20 +48,27 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       modifiedTime: post.updatedAt ?? post.publishedAt,
       authors: [post.author],
       tags: post.tags,
-      images: [
-        {
-          url: "/logo.png",
-          width: 512,
-          height: 512,
-          alt: post.title,
-        },
-      ],
+      images: post.coverImage
+        ? [
+            {
+              url: post.coverImage.src,
+              alt: post.coverImage.alt,
+            },
+          ]
+        : [
+            {
+              url: "/logo.png",
+              width: 512,
+              height: 512,
+              alt: post.title,
+            },
+          ],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: ["/logo.png"],
+      images: post.coverImage ? [post.coverImage.src] : ["/logo.png"],
     },
   };
 }
@@ -128,6 +136,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       />
 
       <BlogHeader />
+
+      {post.coverImage ? <BlogPostHero cover={post.coverImage} /> : null}
 
       <main className="max-w-3xl mx-auto px-6 py-10 space-y-10">
         <article>

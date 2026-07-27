@@ -71,8 +71,9 @@ const post: BlogPost = {
       text: "Quer conferir a ficha completa, ver a foto do pacote e ler impressões de quem já provou? Acesse o registro colaborativo do Patrick Coffees no The Cafe e deixe sua avaliação.",
     },
     {
-      type: "p",
-      text: "Confira a ficha do produto e deixe sua impressão no The Cafe: https://www.thecafe.app/coffee/122-patrick-coffees",
+      type: "link",
+      text: "Ver a ficha completa do Patrick Coffees no The Cafe →",
+      href: "https://www.thecafe.app/coffee/122-patrick-coffees",
     },
   ],
 };

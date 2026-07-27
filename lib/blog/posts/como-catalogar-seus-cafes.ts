@@ -50,8 +50,9 @@ const post: BlogPost = {
       "text": "Se você quer ver as notas sensoriais completas, os métodos de preparo recomendados e as avaliações de quem já provou esse rótulo na prática, acesse a ficha completa do café em nosso acervo colaborativo."
     },
     {
-      "type": "p",
-      "text": "Confira a ficha do produto e deixe sua impressão no The Cafe: https://www.thecafe.app/coffee/119-dengo"
+      "type": "link",
+      "text": "Ver a ficha completa do café Dengo no The Cafe →",
+      "href": "https://www.thecafe.app/coffee/119-dengo"
     }
   ]
 }

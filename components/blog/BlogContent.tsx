@@ -22,6 +22,19 @@ export default function BlogContent({ blocks }: { blocks: BlogBlock[] }) {
                 ))}
               </ul>
             );
+          case "link":
+            return (
+              <p key={index}>
+                <a
+                  href={block.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center font-black text-[#5e2a8b] underline underline-offset-4 decoration-[#5e2a8b]/30 hover:decoration-[#5e2a8b] transition-colors"
+                >
+                  {block.text}
+                </a>
+              </p>
+            );
           default:
             return <p key={index}>{block.text}</p>;
         }

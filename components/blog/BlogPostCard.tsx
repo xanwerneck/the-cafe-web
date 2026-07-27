@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { BlogPost } from "@/lib/blog/types";
 import { blogPostHref } from "@/lib/blog/urls";
 
@@ -14,40 +15,58 @@ export default async function BlogPostCard({ post }: { post: BlogPost }) {
   const href = await blogPostHref(post.slug);
 
   return (
-    <article className="group bg-white rounded-[24px] p-6 ring-1 ring-[#5e2a8b]/8 shadow-sm hover:ring-[#5e2a8b]/20 hover:shadow-md transition-all">
-      <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45 mb-3">
-        <time dateTime={post.publishedAt}>{formatBlogDate(post.publishedAt)}</time>
-        <span aria-hidden>·</span>
-        <span>{post.readingTimeMinutes} min de leitura</span>
-      </div>
+    <article className="group bg-white rounded-[24px] overflow-hidden ring-1 ring-[#5e2a8b]/8 shadow-sm hover:ring-[#5e2a8b]/20 hover:shadow-md transition-all">
+      {post.coverImage ? (
+        <div className="relative h-44 w-full overflow-hidden">
+          <Image
+            src={post.coverImage.src}
+            alt={post.coverImage.alt}
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-300"
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"
+            aria-hidden
+          />
+        </div>
+      ) : null}
 
-      <h2 className="text-2xl font-black tracking-tight leading-tight mb-3 group-hover:text-[#5e2a8b]/80 transition-colors">
-        <Link href={href} className="hover:underline underline-offset-4">
-          {post.title}
+      <div className="p-6">
+        <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45 mb-3">
+          <time dateTime={post.publishedAt}>{formatBlogDate(post.publishedAt)}</time>
+          <span aria-hidden>·</span>
+          <span>{post.readingTimeMinutes} min de leitura</span>
+        </div>
+
+        <h2 className="text-2xl font-black tracking-tight leading-tight mb-3 group-hover:text-[#5e2a8b]/80 transition-colors">
+          <Link href={href} className="hover:underline underline-offset-4">
+            {post.title}
+          </Link>
+        </h2>
+
+        <p className="text-[#5e2a8b]/70 font-medium leading-relaxed mb-4">
+          {post.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-5">
+          {post.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-3 py-1 rounded-full bg-[#E4D1B9]/35 text-[#5e2a8b] text-xs font-semibold"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <Link
+          href={href}
+          className="inline-flex items-center text-sm font-black text-[#5e2a8b] hover:opacity-70 transition-opacity"
+        >
+          Ler artigo →
         </Link>
-      </h2>
-
-      <p className="text-[#5e2a8b]/70 font-medium leading-relaxed mb-4">
-        {post.description}
-      </p>
-
-      <div className="flex flex-wrap gap-2 mb-5">
-        {post.tags.map((tag) => (
-          <span
-            key={tag}
-            className="px-3 py-1 rounded-full bg-[#E4D1B9]/35 text-[#5e2a8b] text-xs font-semibold"
-          >
-            {tag}
-          </span>
-        ))}
       </div>
-
-      <Link
-        href={href}
-        className="inline-flex items-center text-sm font-black text-[#5e2a8b] hover:opacity-70 transition-opacity"
-      >
-        Ler artigo →
-      </Link>
     </article>
   );
 }

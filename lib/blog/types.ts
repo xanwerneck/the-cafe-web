@@ -1,7 +1,13 @@
 export type BlogBlock =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
-  | { type: "ul"; items: string[] };
+  | { type: "ul"; items: string[] }
+  | { type: "link"; text: string; href: string };
+
+export type BlogCoverImage = {
+  src: string;
+  alt: string;
+};
 
 export type BlogPost = {
   slug: string;
@@ -12,5 +18,6 @@ export type BlogPost = {
   author: string;
   tags: string[];
   readingTimeMinutes: number;
+  coverImage?: BlogCoverImage;
   content: BlogBlock[];
 };
