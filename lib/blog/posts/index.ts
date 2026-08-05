@@ -1,3 +1,4 @@
+import cafe85Pontos from "@/lib/blog/posts/cafe-85-pontos-vale-a-pena-conhecer";
 import cafeBaggioBourbon from "@/lib/blog/posts/cafe-baggio-bourbon-500g-graos";
 import cafeBaggioChocolateTrufado from "@/lib/blog/posts/cafe-baggio-chocolate-trufado-vale-a-pena-entenda";
 import cafeEspecialPatrickCoffees from "@/lib/blog/posts/cafe-especial-patrick-coffees-84-pontos";
@@ -13,6 +14,7 @@ export const blogPosts: BlogPost[] = [
   cafeBaggioBourbon,
   cafeBaggioChocolateTrufado,
   diferencaArabicaConilon,
+  cafe85Pontos,
 ].sort(
   (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
 );
