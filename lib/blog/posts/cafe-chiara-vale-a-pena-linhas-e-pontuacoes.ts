@@ -17,7 +17,7 @@ const post: BlogPost = {
   ],
   readingTimeMinutes: 3,
   coverImage: {
-    src: "https://storage.googleapis.com/thecafe-pictures/coffee/original/coffee-121-1785891398.jpeg",
+    src: "https://storage.googleapis.com/thecafe-pictures/coffee/original/coffee-121-1784940529.jpeg",
     alt: "Rótulo do Café Chiara Tangará 82 pontos",
   },
   content: [
