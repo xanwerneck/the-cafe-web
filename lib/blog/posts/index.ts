@@ -6,9 +6,11 @@ import cafeEspecialPatrickCoffees from "@/lib/blog/posts/cafe-especial-patrick-c
 import comoCatalogar from "@/lib/blog/posts/como-catalogar-seus-cafes";
 import diferencaArabicaConilon from "@/lib/blog/posts/diferenca-entre-cafe-arabica-e-conilon-robusta";
 import oQueECafeEspecial from "@/lib/blog/posts/o-que-e-cafe-especial";
+import proporcaoIdeal from "@/lib/blog/posts/proporcao-ideal-para-preparar-cafe-especial";
 import type { BlogPost } from "@/lib/blog/types";
 
 export const blogPosts: BlogPost[] = [
+  proporcaoIdeal,
   oQueECafeEspecial,
   comoCatalogar,
   cafeEspecialPatrickCoffees,
