@@ -70,7 +70,12 @@ const post: BlogPost = {
     },
     {
       type: "p",
-      text: "Acesse o acervo colaborativo e explore os detalhes de centenas de rótulos no The Cafe: https://www.thecafe.app",
+      text: "Acesse o acervo colaborativo e explore os detalhes de centenas de rótulos no The Cafe.",
+    },
+    {
+      type: "link",
+      text: "Explorar o acervo no The Cafe →",
+      href: "https://www.thecafe.app",
     },
   ],
 };
