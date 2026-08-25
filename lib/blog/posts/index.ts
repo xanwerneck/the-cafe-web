@@ -2,6 +2,7 @@ import cafe85Pontos from "@/lib/blog/posts/cafe-85-pontos-vale-a-pena-conhecer";
 import cafeBaggioBourbon from "@/lib/blog/posts/cafe-baggio-bourbon-500g-graos";
 import cafeBaggioChocolateTrufado from "@/lib/blog/posts/cafe-baggio-chocolate-trufado-vale-a-pena-entenda";
 import cafeChiara from "@/lib/blog/posts/cafe-chiara-vale-a-pena-linhas-e-pontuacoes";
+import cafeDengo from "@/lib/blog/posts/cafe-dengo-vale-a-pena-quem-faz";
 import cafeEspecialPatrickCoffees from "@/lib/blog/posts/cafe-especial-patrick-coffees-84-pontos";
 import comoCatalogar from "@/lib/blog/posts/como-catalogar-seus-cafes";
 import diferencaArabicaConilon from "@/lib/blog/posts/diferenca-entre-cafe-arabica-e-conilon-robusta";
@@ -19,6 +20,7 @@ export const blogPosts: BlogPost[] = [
   diferencaArabicaConilon,
   cafe85Pontos,
   cafeChiara,
+  cafeDengo,
 ].sort(
   (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
 );
