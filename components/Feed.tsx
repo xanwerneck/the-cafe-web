@@ -1,11 +1,11 @@
 import CoffeeCard from "@/components/CoffeeCard";
 import FeedGrid from "@/components/FeedGrid";
-import { feedSeedCoffees } from "@/lib/coffees/feedSeed";
+import { getCoffees } from "@/lib/coffees/api";
+import { FEED_PAGE_SIZE } from "@/lib/coffees/types";
 
-const PAGE_SIZE = 4;
-
-export default function Feed() {
-  const seedIds = feedSeedCoffees.map((coffee) => coffee.id);
+export default async function Feed() {
+  const coffees = await getCoffees(0);
+  const initialIds = coffees.map((coffee) => coffee.id);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
@@ -17,11 +17,11 @@ export default function Feed() {
       </header>
 
       <FeedGrid
-        initialPage={feedSeedCoffees.length >= PAGE_SIZE ? 1 : 0}
-        hasMoreInitial={feedSeedCoffees.length >= PAGE_SIZE}
-        seedIds={seedIds}
+        initialPage={coffees.length >= FEED_PAGE_SIZE ? 1 : 0}
+        hasMoreInitial={coffees.length >= FEED_PAGE_SIZE}
+        initialIds={initialIds}
       >
-        {feedSeedCoffees.map((coffee) => (
+        {coffees.map((coffee) => (
           <CoffeeCard key={coffee.id} coffee={coffee} />
         ))}
       </FeedGrid>

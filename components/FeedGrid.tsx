@@ -2,32 +2,20 @@
 
 import { useCallback, useRef, useState, type ReactNode } from "react";
 import CoffeeCard from "@/components/CoffeeCard";
-
-const PAGE_SIZE = 4;
-
-type FeedCoffee = {
-  id: number;
-  title: string;
-  original_picture: string;
-  process?: string;
-  views?: number;
-  user?: {
-    username?: string;
-  };
-};
+import { FEED_PAGE_SIZE, type FeedCoffee } from "@/lib/coffees/types";
 
 type FeedGridProps = {
   children: ReactNode;
   initialPage: number;
   hasMoreInitial: boolean;
-  seedIds: number[];
+  initialIds: number[];
 };
 
 export default function FeedGrid({
   children,
   initialPage,
   hasMoreInitial,
-  seedIds,
+  initialIds,
 }: FeedGridProps) {
   const [extraCoffees, setExtraCoffees] = useState<FeedCoffee[]>([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +24,7 @@ export default function FeedGrid({
   const pageRef = useRef(initialPage);
   const loadingRef = useRef(false);
   const hasMoreRef = useRef(hasMoreInitial);
-  const seenIdsRef = useRef(new Set(seedIds));
+  const seenIdsRef = useRef(new Set(initialIds));
 
   const loadNextPage = useCallback(async () => {
     if (loadingRef.current || !hasMoreRef.current) return;
@@ -59,7 +47,7 @@ export default function FeedGrid({
         setExtraCoffees((prev) => [...prev, ...fresh]);
         pageRef.current = page + 1;
 
-        if (data.length < PAGE_SIZE) {
+        if (data.length < FEED_PAGE_SIZE) {
           hasMoreRef.current = false;
           setHasMore(false);
         }
@@ -72,7 +60,7 @@ export default function FeedGrid({
     }
   }, []);
 
-  const totalCount = seedIds.length + extraCoffees.length;
+  const totalCount = initialIds.length + extraCoffees.length;
 
   return (
     <>
