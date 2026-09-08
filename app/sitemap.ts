@@ -5,7 +5,7 @@ import { coffeePublicUrl } from "@/lib/coffeeSlug";
 import { getAllCoffees } from "@/lib/coffees/api";
 import { siteConfig } from "@/lib/site";
 
-const SITEMAP_REVALIDATE_SECONDS = 60 * 60 * 24;
+const SITEMAP_REVALIDATE_SECONDS = 86400;
 
 export const revalidate = SITEMAP_REVALIDATE_SECONDS;
 
