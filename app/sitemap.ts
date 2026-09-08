@@ -5,12 +5,10 @@ import { coffeePublicUrl } from "@/lib/coffeeSlug";
 import { getAllCoffees } from "@/lib/coffees/api";
 import { siteConfig } from "@/lib/site";
 
-const SITEMAP_REVALIDATE_SECONDS = 86400;
-
-export const revalidate = SITEMAP_REVALIDATE_SECONDS;
+export const revalidate = 86400;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const coffees = await getAllCoffees({ revalidate: SITEMAP_REVALIDATE_SECONDS });
+  const coffees = await getAllCoffees({ revalidate: 86400 });
 
   return [
     {
