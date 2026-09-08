@@ -1,21 +1,25 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog/posts";
 import { blogPublicUrl } from "@/lib/blog/urls";
+import { coffeePublicUrl } from "@/lib/coffeeSlug";
+import { getAllCoffees } from "@/lib/coffees/api";
 import { siteConfig } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+const SITEMAP_REVALIDATE_SECONDS = 60 * 60 * 24;
+
+export const revalidate = SITEMAP_REVALIDATE_SECONDS;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const coffees = await getAllCoffees({ revalidate: SITEMAP_REVALIDATE_SECONDS });
 
   return [
     {
       url: siteConfig.url,
-      lastModified,
       changeFrequency: "daily",
       priority: 1,
     },
     {
       url: siteConfig.blogUrl,
-      lastModified,
       changeFrequency: "weekly",
       priority: 0.9,
     },
@@ -25,15 +29,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
+    ...coffees.map((coffee) => ({
+      url: coffeePublicUrl(coffee),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+      images: coffee.original_picture ? [coffee.original_picture] : undefined,
+    })),
     {
       url: `${siteConfig.url}/login`,
-      lastModified,
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
       url: `${siteConfig.url}/novo`,
-      lastModified,
       changeFrequency: "weekly",
       priority: 0.8,
     },
