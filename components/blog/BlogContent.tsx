@@ -1,3 +1,4 @@
+import BlogCoffeeCard from "@/components/blog/BlogCoffeeCard";
 import type { BlogBlock } from "@/lib/blog/types";
 
 export default function BlogContent({ blocks }: { blocks: BlogBlock[] }) {
@@ -34,6 +35,20 @@ export default function BlogContent({ blocks }: { blocks: BlogBlock[] }) {
                   {block.text}
                 </a>
               </p>
+            );
+          case "coffeeCard":
+            return (
+              <BlogCoffeeCard
+                key={index}
+                href={block.href}
+                title={block.title}
+                image={block.image}
+                imageAlt={block.imageAlt}
+                producer={block.producer}
+                meta={block.meta}
+                description={block.description}
+                cta={block.cta}
+              />
             );
           default:
             return <p key={index}>{block.text}</p>;

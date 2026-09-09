@@ -6,7 +6,7 @@ const post: BlogPost = {
   description:
     "Descubra se o Café Dengo é bom, quem fabrica os grãos, o perfil sensorial dos rótulos e se vale a pena o investimento em um café especial gourmet.",
   publishedAt: "2026-07-20",
-  updatedAt: "2026-08-25",
+  updatedAt: "2026-09-09",
   author: "Alexandre Werneck",
   tags: [
     "café dengo",
@@ -16,6 +16,10 @@ const post: BlogPost = {
     "vale a pena",
   ],
   readingTimeMinutes: 4,
+  coverImage: {
+    src: "https://storage.googleapis.com/thecafe-pictures/coffee/original/coffee-119-1781956546.jpg",
+    alt: "Embalagem do Café Dengo 100% Arábica, produzido pela Unique Cafés Especiais",
+  },
   content: [
     {
       type: "p",
@@ -88,16 +92,20 @@ const post: BlogPost = {
     },
     {
       type: "p",
-      text: "Quer conferir o que outros apaixonados por café acharam do rótulo da Dengo e comparar notas sensoriais?",
+      text: "Quer conferir o que outros apaixonados por café acharam do rótulo da Dengo e comparar notas sensoriais? A ficha no The Cafe reúne a foto do pacote, o produtor, a torra e as opiniões da comunidade.",
     },
     {
-      type: "p",
-      text: "Acesse a ficha técnica e veja a nota da comunidade no The Cafe.",
-    },
-    {
-      type: "link",
-      text: "Ver a ficha completa do café Dengo no The Cafe →",
+      type: "coffeeCard",
       href: "https://www.thecafe.app/coffee/119-dengo",
+      title: "Dengo",
+      image:
+        "https://storage.googleapis.com/thecafe-pictures/coffee/original/coffee-119-1781956546.jpg",
+      imageAlt:
+        "Embalagem do Café Dengo 100% Arábica, produzido pela Unique Cafés Especiais",
+      producer: "Unique Cafés Especiais",
+      meta: "100% Arábica · Grão · Torra 5/8",
+      description:
+        "Café 100% Arábica, distribuído pela Dengo, e fabricado pela Unique Cafés Especiais",
     },
   ],
 };

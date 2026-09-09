@@ -2,7 +2,18 @@ export type BlogBlock =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
   | { type: "ul"; items: string[] }
-  | { type: "link"; text: string; href: string };
+  | { type: "link"; text: string; href: string }
+  | {
+      type: "coffeeCard";
+      href: string;
+      title: string;
+      image: string;
+      imageAlt: string;
+      producer?: string;
+      meta?: string;
+      description?: string;
+      cta?: string;
+    };
 
 export type BlogCoverImage = {
   src: string;

@@ -67,6 +67,7 @@ function blogJsonLd() {
             name: post.author,
           },
           url: `${siteConfig.blogUrl}/${post.slug}`,
+          ...(post.coverImage ? { image: post.coverImage.src } : {}),
         })),
       },
       {

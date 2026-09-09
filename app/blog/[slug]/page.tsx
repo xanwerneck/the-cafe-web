@@ -102,6 +102,15 @@ function postJsonLd(post: NonNullable<ReturnType<typeof getBlogPost>>) {
     },
     url,
     keywords: post.tags.join(", "),
+    ...(post.coverImage
+      ? {
+          image: {
+            "@type": "ImageObject",
+            url: post.coverImage.src,
+            caption: post.coverImage.alt,
+          },
+        }
+      : {}),
   };
 }
 
