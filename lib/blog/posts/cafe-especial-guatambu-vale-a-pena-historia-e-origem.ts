@@ -7,7 +7,7 @@ const coverImage = {
 
 const post: BlogPost = {
   slug: "cafe-especial-guatambu-vale-a-pena-historia-e-origem",
-  title: "Café Guatambú Vale a Pena? Conheça a História de 4 Gerações no Sul de Minas",
+  title: "Café Guatambú Vale a Pena? Conheça a História de 4 Gerações no Sudoeste de Minas",
   description:
     "Descubra a história do Café Especial Guatambú, produzido em São Sebastião do Paraíso (MG) com tradição familiar de 4 gerações, o significado do nome e o cuidado da lavoura ao pós-colheita.",
   publishedAt: "2026-09-12",
@@ -17,7 +17,7 @@ const post: BlogPost = {
     "café guatambú",
     "guatambu",
     "café especial",
-    "sul de minas",
+    "sudoeste de minas",
     "são sebastião do paraíso",
     "análise de café",
   ],
