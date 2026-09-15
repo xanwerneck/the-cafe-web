@@ -9,8 +9,9 @@ const post: BlogPost = {
   slug: "cafe-especial-guatambu-vale-a-pena-historia-e-origem",
   title: "Café Guatambú Vale a Pena? Conheça a História de 4 Gerações no Sul de Minas",
   description:
-    "Descubra a história do Café Especial Guatambú, produzido em São Sebastião do Paraíso (MG) com tradição familiar de 4 gerações, controle total da lavoura à torra e o significado do seu nome.",
+    "Descubra a história do Café Especial Guatambú, produzido em São Sebastião do Paraíso (MG) com tradição familiar de 4 gerações, o significado do nome e o cuidado da lavoura ao pós-colheita.",
   publishedAt: "2026-09-12",
+  updatedAt: "2026-09-15",
   author: "Alexandre Werneck",
   tags: [
     "café guatambú",
@@ -25,7 +26,7 @@ const post: BlogPost = {
   content: [
     {
       type: "p",
-      text: "Quem navega pelo universo dos cafés especiais sabe que por trás de um grande grão quase sempre existe uma história de dedicação com a terra. O Café Especial Guatambú é um desses exemplos marcantes, unindo tradição secular no interior de Minas Gerais com controle rigoroso de cada etapa da produção.",
+      text: "Quem navega pelo universo dos cafés especiais sabe que por trás de um grande grão quase sempre existe uma história de dedicação com a terra. O Café Especial Guatambú é um desses exemplos marcantes, unindo tradição secular no interior de Minas Gerais com cuidado rigoroso na lavoura e no pós-colheita.",
     },
     {
       type: "h2",
@@ -33,15 +34,15 @@ const post: BlogPost = {
     },
     {
       type: "p",
-      text: "Produzido em São Sebastião do Paraíso, uma das regiões cafeeiras mais prestigiadas do Sul de Minas, a história da família à frente do Café Guatambú acompanha quatro gerações dedicadas ao cultivo do café. Todo esse conhecimento acumulado ao longo de décadas se traduz em um cuidado único na seleção dos lotes.",
+      text: "Produzido em São Sebastião do Paraíso, na região Sudoeste de Minas, a história da família à frente do Café Guatambú acompanha quatro gerações dedicadas ao cultivo do café. Todo esse conhecimento acumulado ao longo de décadas se traduz em um cuidado único na seleção dos lotes.",
     },
     {
       type: "h2",
-      text: "Do Plantio à Torra: Controle Total do Processo",
+      text: "Do Plantio à Secagem: Cuidado na Origem",
     },
     {
       type: "p",
-      text: "Um dos grandes diferenciais do Café Guatambú é que eles cuidam pessoalmente de todo o ciclo: desde o plantio das mudas, passando pelo manejo sustentável, colheita seletiva, secagem e, por fim, a torra dos grãos. Ter a torrefação própria dentro da origem garante um padrão de qualidade constante e grãos sempre frescos.",
+      text: "Um dos grandes diferenciais do Café Guatambú é o acompanhamento próximo do ciclo na origem: do plantio das mudas ao manejo sustentável, da colheita seletiva à secagem dos grãos. Esse controle da lavoura ao pós-colheita ajuda a manter lotes mais uniformes e fiéis ao terroir da fazenda.",
     },
     {
       type: "h2",
@@ -49,7 +50,11 @@ const post: BlogPost = {
     },
     {
       type: "p",
-      text: "O nome da marca é uma homenagem direta à Guatambú, uma árvore nativa símbolo de resistência, força e profunda conexão com a natureza. Essa identidade reflete a filosofia da fazenda em preservar o meio ambiente local enquanto produz grãos 100% Arábica de altíssima qualidade.",
+      text: "O nome da marca é uma homenagem ao primeiro talhão de café da família. Na cafeicultura, um talhão é uma subdivisão da lavoura: uma área delimitada geograficamente onde as plantas compartilham características parecidas, o que facilita o manejo e a seleção dos lotes.",
+    },
+    {
+      type: "p",
+      text: "Esse talhão se chama Guatambú porque a árvore, nativa da região, nasce no meio do cafezal. A presença do Guatambú entre os pés de café deu identidade ao lote pioneiro e, depois, à própria marca.",
     },
     {
       type: "h2",
