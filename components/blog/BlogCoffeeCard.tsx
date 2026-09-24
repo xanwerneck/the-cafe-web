@@ -8,6 +8,7 @@ type BlogCoffeeCardProps = {
   producer?: string;
   meta?: string;
   description?: string;
+  kicker?: string;
   cta?: string;
 };
 
@@ -19,6 +20,7 @@ export default function BlogCoffeeCard({
   producer,
   meta,
   description,
+  kicker = "No acervo The Cafe",
   cta = "Ver ficha e avaliações no The Cafe →",
 }: BlogCoffeeCardProps) {
   return (
@@ -40,7 +42,7 @@ export default function BlogCoffeeCard({
 
       <div className="p-4 sm:p-5 flex flex-col justify-center gap-1.5 min-w-0">
         <p className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45">
-          No acervo The Cafe
+          {kicker}
         </p>
         <h3 className="font-black text-lg leading-tight text-[#5e2a8b]">{title}</h3>
         {producer ? (

@@ -12,6 +12,7 @@ export type BlogBlock =
       producer?: string;
       meta?: string;
       description?: string;
+      kicker?: string;
       cta?: string;
     };
 

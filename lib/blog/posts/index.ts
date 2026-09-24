@@ -1,3 +1,4 @@
+import cincoErrosCafeEspecial from "@/lib/blog/posts/5-erros-que-destroem-seu-cafe-especial";
 import cafe85Pontos from "@/lib/blog/posts/cafe-85-pontos-vale-a-pena-conhecer";
 import cafeBaggioBourbon from "@/lib/blog/posts/cafe-baggio-bourbon-500g-graos";
 import cafeBaggioChocolateTrufado from "@/lib/blog/posts/cafe-baggio-chocolate-trufado-vale-a-pena-entenda";
@@ -12,6 +13,7 @@ import proporcaoIdeal from "@/lib/blog/posts/proporcao-ideal-para-preparar-cafe-
 import type { BlogPost } from "@/lib/blog/types";
 
 export const blogPosts: BlogPost[] = [
+  cincoErrosCafeEspecial,
   proporcaoIdeal,
   oQueECafeEspecial,
   comoCatalogar,

@@ -47,6 +47,7 @@ export default function BlogContent({ blocks }: { blocks: BlogBlock[] }) {
                 producer={block.producer}
                 meta={block.meta}
                 description={block.description}
+                kicker={block.kicker}
                 cta={block.cta}
               />
             );
