@@ -63,30 +63,23 @@ function BurnScale({ burn }: { burn?: number | string | null }) {
 
 function TastesList({ tastes }: { tastes: string }) {
   const items = tastes
-    .split(/[,|]/)
-    .map((s) => s.trim())
+    .split(/\s*[,|]\s*|\s+e\s+/i)
+    .map((note) => note.trim())
     .filter(Boolean);
 
+  if (items.length === 0) return null;
+
   return (
-    <section className="space-y-3">
-      <h2 className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45">
-        Notas
-      </h2>
-      {items.length > 1 ? (
-        <div className="flex flex-wrap gap-2">
-          {items.map((note) => (
-            <span
-              key={note}
-              className="px-3 py-1.5 rounded-full bg-[#E4D1B9]/35 text-[#5e2a8b] text-sm font-semibold"
-            >
-              {note}
-            </span>
-          ))}
-        </div>
-      ) : (
-        <p className="text-[#5e2a8b]/80 font-medium leading-relaxed">{tastes}</p>
-      )}
-    </section>
+    <div className="flex flex-wrap gap-2">
+      {items.map((note) => (
+        <span
+          key={note}
+          className="px-3 py-1.5 rounded-full bg-[#E4D1B9]/35 text-[#5e2a8b] text-sm font-semibold lowercase"
+        >
+          {note}
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -118,9 +111,6 @@ export default function CoffeeDetail({ coffee }: { coffee: Coffee }) {
         <section className="space-y-3">
           <div className="flex justify-between items-start gap-4">
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-black uppercase tracking-[2px] text-[#5e2a8b]/40 mb-1">
-                Título
-              </p>
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight capitalize">
                 {title}
               </h1>
@@ -131,7 +121,39 @@ export default function CoffeeDetail({ coffee }: { coffee: Coffee }) {
             </div>
           </div>
 
-          {coffee.user?.username && (
+          {coffee.tastes?.trim() && <TastesList tastes={coffee.tastes} />}
+        </section>
+
+        <section className="grid grid-cols-2 gap-3">
+          <DetailCard label="Origem" value={coffee.origin} className="capitalize" />
+          <DetailCard label="Produtor" value={coffee.producer} className="capitalize" />
+          <DetailCard
+            label="Formato"
+            value={coffee.format != null ? formatLabel(coffee.format) : null}
+          />
+          {coffee.process && (
+            <DetailCard label="Processo" value={coffee.process} className="capitalize" />
+          )}
+          {coffee.altitude && <DetailCard label="Altitude" value={coffee.altitude} />}
+          <BurnScale burn={coffee.burn} />
+        </section>
+
+        {hasBio && (
+          <section className="bg-white rounded-[24px] p-5 ring-1 ring-[#5e2a8b]/8 shadow-sm">
+            <h2 className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45 mb-2">
+              Descrição
+            </h2>
+            <p className="text-[#5e2a8b]/85 leading-relaxed font-medium whitespace-pre-line">
+              {coffee.bio}
+            </p>
+          </section>
+        )}
+
+        {coffee.user?.username && (
+          <section className="space-y-2">
+            <h2 className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45">
+              Catalogado por
+            </h2>
             <Link
               href={userHref(coffee.user.username)}
               className="inline-flex items-center gap-2 bg-white ring-1 ring-[#5e2a8b]/8 rounded-full pl-1 pr-4 py-1 hover:ring-[#5e2a8b]/20 hover:shadow-sm transition-all"
@@ -156,39 +178,8 @@ export default function CoffeeDetail({ coffee }: { coffee: Coffee }) {
                 </span>
               )}
             </Link>
-          )}
-        </section>
-
-        {hasBio && (
-          <section className="bg-white rounded-[24px] p-5 ring-1 ring-[#5e2a8b]/8 shadow-sm">
-            <h2 className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45 mb-2">
-              Descrição
-            </h2>
-            <p className="text-[#5e2a8b]/85 leading-relaxed font-medium whitespace-pre-line">
-              {coffee.bio}
-            </p>
           </section>
         )}
-
-        {coffee.tastes?.trim() && (
-          <section className="bg-white rounded-[24px] p-5 ring-1 ring-[#5e2a8b]/8 shadow-sm">
-            <TastesList tastes={coffee.tastes} />
-          </section>
-        )}
-
-        <section className="grid grid-cols-2 gap-3">
-          <DetailCard label="Origem" value={coffee.origin} className="capitalize" />
-          <DetailCard label="Produtor" value={coffee.producer} className="capitalize" />
-          <DetailCard
-            label="Formato"
-            value={coffee.format != null ? formatLabel(coffee.format) : null}
-          />
-          {coffee.process && (
-            <DetailCard label="Processo" value={coffee.process} className="capitalize" />
-          )}
-          {coffee.altitude && <DetailCard label="Altitude" value={coffee.altitude} />}
-          <BurnScale burn={coffee.burn} />
-        </section>
 
         <CoffeeReviews
           key={coffee.id}
