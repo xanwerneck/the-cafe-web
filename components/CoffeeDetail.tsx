@@ -164,7 +164,9 @@ export default function CoffeeDetail({ coffee }: { coffee: Coffee }) {
             <h2 className="text-[10px] font-bold uppercase tracking-[2px] text-[#5e2a8b]/45 mb-2">
               Descrição
             </h2>
-            <p className="text-[#5e2a8b]/85 leading-relaxed font-medium">{coffee.bio}</p>
+            <p className="text-[#5e2a8b]/85 leading-relaxed font-medium whitespace-pre-line">
+              {coffee.bio}
+            </p>
           </section>
         )}
 
